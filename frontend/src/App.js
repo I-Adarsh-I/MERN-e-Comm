@@ -1,9 +1,7 @@
 import "./App.css";
 import {
-  BrowserRouter as Router,
   Routes,
   Route,
-  redirect,
 } from "react-router-dom";
 import Home from "./pages/Home/Home";
 import Navbar from "./components/navbar/Navbar";
@@ -18,6 +16,8 @@ import AllProducts from "./pages/admin_accessible_pages/AllProducts";
 import AllProfiles from "./pages/admin_accessible_pages/AllProfiles";
 import Success from "./pages/chekout/Success";
 import Failure from "./pages/chekout/Failure";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -37,6 +37,7 @@ function App() {
         <Route path="/paymentsuccess" element={<Success />} />
         <Route path="/paymentfailure" element={<Failure />} />
       </Routes>
+      <ToastContainer autoClose={5000} />
     </div>
   );
 }

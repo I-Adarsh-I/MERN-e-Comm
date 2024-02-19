@@ -54,7 +54,7 @@ module.exports.addNewProduct = async (req, res) => {
     const { image, name, description, price } = req.body;
 
     if(!image || !name || !description || !price){
-      res.status(400).json({error: 'One or more fields are empty'});
+      return res.status(400).json({error: 'One or more fields are empty'});
     }
 
     req.user.password = undefined;

@@ -6,7 +6,8 @@ import { BASE_API } from "../../config";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { loginRequested, loginSuccessful } from "../../redux/slices/userSlice";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -35,12 +36,16 @@ function Login() {
         navigate("/home");
         dispatch(loginSuccessful(resp.data.user.existingUser))
         localStorage.setItem('Auth token', resp.data.token.token)
+        toast.success(resp.data.messgae)
       }
       if (resp.status === 400) {
         console.log(resp.data.error);
+        toast.error(resp.data.error)
         navigate("/");
       }
     } catch (err) {
+      toast.error(err.response.data.error)
+
       console.log(err);
     }
   };
@@ -132,6 +137,7 @@ function Login() {
           </form>
         </div>
       </div>
+            <ToastContainer autoClose={5000}/>
     </div>
   );
 }

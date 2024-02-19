@@ -5,7 +5,10 @@ var cors = require("cors");
 const router = require("./router/user_router");
 const productRouter = require('./router/product_router')
 const orderRouter = require('./router/order_router')
-const paymentRouter = require('./router/payment_router')
+const paymentRouter = require('./router/payment_router');
+const imgRouter = require('./router/img_router')
+const verifyUser = require("./middlewares/verifyUser");
+const verifyAdmin = require("./middlewares/verifyAdmin");
 var app = express();
 
 const corsConfiguration = {
@@ -21,6 +24,7 @@ app.use(router);
 app.use(productRouter);
 app.use(orderRouter);
 app.use(paymentRouter);
+app.use(imgRouter)
 
 const startServer = async () => {
   try {

@@ -29,3 +29,16 @@ module.exports.upload = multer({
     }
   },
 });
+
+module.exports.download = (req,res) => {
+  const filename = req.params.filename;
+
+  const filePath = path.join(__dirname,"../uploads/",filename);
+
+  res.download(filePath, filename, (err) =>{
+      if(err){
+          console.log(err)
+          res.status(500).json({error: "Internal server error"})
+      }
+  })
+}

@@ -4,14 +4,21 @@ import "./product.css";
 import { BASE_API } from "../../config";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import ProductUp from "../../components/modal/ProductUp";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 function Products() {
-
+  const navigate = useNavigate();
+  const token = localStorage.getItem("Auth token");
   const [allProducts, setAllproducts] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+  //Fetch all products
   const fetchAllProducts = async () => {
-    const token = localStorage.getItem("Auth token");
 
     const config = {
       headers: {
@@ -25,17 +32,34 @@ function Products() {
         setAllproducts(resp.data.products);
       }
     } catch (err) {
+      toast.error('User not logged In')
       console.log(err);
     }
   };
 
+
   useEffect(() => {
-    fetchAllProducts();
+    if(token){
+      fetchAllProducts();
+    }else{
+      navigate('/')
+      toast.error('User not logged In')
+    }
   }, []);
 
   // useEffect(() => {
   //   console.log(allProducts);
   // }, [allProducts]);
+
+
+
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const isAdmin = useSelector((state) => state.auth.user.isAdmin);
 
@@ -48,7 +72,7 @@ function Products() {
             role="alert"
           >
             <p className="m-0">Add a new products</p>
-            <button className="btn btn-sm btn-primary">+Add new product</button>
+            <button className="btn btn-sm btn-primary" onClick={openModal}>+Add new product</button>
           </div>
         </>
       )}
@@ -63,6 +87,8 @@ function Products() {
           );
         })}
       </div>
+      <ProductUp isOpen={isModalOpen} onClose={closeModal} showAllProducts={fetchAllProducts}/>
+      <ToastContainer autoClose ={5000}/>
     </div>
   );
 }

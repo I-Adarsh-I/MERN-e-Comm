@@ -7,18 +7,18 @@ const Navbar = () => {
 
   const logOutHandler = () => {
     try {
-      localStorage.removeItem('Auth token');
-      localStorage.removeItem('persist:root');
+      localStorage.removeItem("Auth token");
+      localStorage.removeItem("persist:root");
 
-      navigate('/')
+      navigate("/");
     } catch (err) {
       console.log(err);
     }
-  }
+  };
 
-  const isTokenExist = localStorage.getItem('Auth token')
+  const isTokenExist = localStorage.getItem("Auth token");
 
-  const itemsInCart = useSelector(state => state.cart)
+  const itemsInCart = useSelector((state) => state.cart);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top">
@@ -53,7 +53,10 @@ const Navbar = () => {
           </ul>
           <div className="buttons text-center">
             {isTokenExist ? (
-              <button className="btn btn-outline-dark m-2" onClick={logOutHandler}>
+              <button
+                className="btn btn-outline-dark m-2"
+                onClick={logOutHandler}
+              >
                 <i className="fa-solid fa-right-from-bracket mr-1"></i> Log Out
               </button>
             ) : (
@@ -63,14 +66,39 @@ const Navbar = () => {
             )}
 
             {isTokenExist && (
-            <Link to="/cart" className="btn btn-outline-dark m-2">
-              <i className="fa fa-cart-shopping mr-1"></i> Cart ({itemsInCart.items.length})
-            </Link>
+              <Link to="/cart" className="btn btn-outline-dark m-2">
+                <i className="fa fa-cart-shopping mr-1"></i> Cart (
+                {itemsInCart.items.length})
+              </Link>
             )}
 
-            <Link to="/profile" className="btn btn-outline-dark m-2">
-              <i className="fa-solid fa-user mr-1"></i> Profile{" "}
-            </Link>
+            {isTokenExist && (
+              <div className="dropdown d-inline">
+                <button
+                  type="button"
+                  className="btn btn-outline-dark dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  Profile
+                </button>
+                <ul className="dropdown-menu">
+                  <li>
+                    <Link to={"/profile"} className="dropdown-item">
+                      All details
+                    </Link>
+                  </li>
+                  <li>
+                    <hr className="dropdown-divider" />
+                  </li>
+                  <li>
+                    <a className="dropdown-item" href="#">
+                      Account settings
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
         </div>
       </div>
