@@ -1,0 +1,14 @@
+.profile-avatar{
+    border-radius: 100%;
+    overflow: hidden;
+    height: 55px;
+    width: 55px;
+}
+.profile-img {
+    width: 100%; /* Make the image fill the avatar container */
+    height: auto; /* Maintain aspect ratio */
+}
+.icon{
+    width: 100px;
+    height: 100px;
+}
