@@ -4,15 +4,17 @@ import axios from "axios";
 import { BASE_API } from "../../config";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function AllOrders() {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const token = localStorage.getItem("Auth token");
 
   // Get all orders
   const fetchAllOrders = async () => {
-    const token = localStorage.getItem("Auth token");
 
     const config = {
       headers: {
@@ -23,7 +25,7 @@ function AllOrders() {
 
     try {
       const resp = await axios.get(`${BASE_API}/allorders`, config);
-      console.log(resp.data.orders)
+      // console.log(resp.data.orders)
       setOrders(resp.data.orders);
     } catch (err) {
       console.log(err);
@@ -33,6 +35,28 @@ function AllOrders() {
   useEffect(() => {
     fetchAllOrders();
   }, []);
+
+  //Delete single order
+
+  const deleteSingleOrder = async(orderId) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        authorization: `Bearer ${token}`,
+      },
+    };
+    try {
+      const resp = await axios.delete(`${BASE_API}/order/${orderId}`, config)
+      if(resp.status === 200){
+        // console.log(resp.data.message);
+        toast.success(resp.data.message)
+        window.location.reload();
+        return;
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }
 
 
   const handleRowClick = (order) => {
@@ -101,7 +125,7 @@ function AllOrders() {
             {/* Render other order details as needed */}
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="danger">
+            <Button variant="danger" onClick={() => deleteSingleOrder(selectedOrder._id)}>
             <i className="fa-solid fa-trash"></i> Delete order
             </Button>
             <Button variant="secondary" onClick={handleCloseModal}>
@@ -110,6 +134,7 @@ function AllOrders() {
           </Modal.Footer>
         </Modal>
       )}
+      <ToastContainer autoClose={5000}/>
     </div>
   );
 }

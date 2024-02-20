@@ -7,11 +7,13 @@ const {
   getAllOrders,
   getMyOrders,
   getOrderById,
+  deleteSingleOrder,
 } = require("../controllers/order");
 
 router.post("/placeorder", verifyUser, addItems);
 router.get("/orders", verifyUser, getMyOrders);
 router.get("/allorders", verifyUser, verifyAdmin, getAllOrders);
 router.get("/orders/:orderId", verifyUser, getOrderById);
+router.delete("/order/:orderId", verifyUser, deleteSingleOrder);
 
 module.exports = router;

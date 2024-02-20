@@ -3,18 +3,19 @@ import Card from "../../components/product_card/Card";
 import "./product.css";
 import { BASE_API } from "../../config";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ProductUp from "../../components/modal/ProductUp";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { modalOpenReq } from "../../redux/slices/modalSlice";
 
 
 function Products() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const token = localStorage.getItem("Auth token");
   const [allProducts, setAllproducts] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   //Fetch all products
@@ -51,14 +52,8 @@ function Products() {
   //   console.log(allProducts);
   // }, [allProducts]);
 
-
-
   const openModal = () => {
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
+    dispatch(modalOpenReq());
   };
 
   const isAdmin = useSelector((state) => state.auth.user.isAdmin);
@@ -87,7 +82,7 @@ function Products() {
           );
         })}
       </div>
-      <ProductUp isOpen={isModalOpen} onClose={closeModal} showAllProducts={fetchAllProducts}/>
+      <ProductUp showAllProducts={fetchAllProducts}/>
       <ToastContainer autoClose ={5000}/>
     </div>
   );

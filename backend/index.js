@@ -26,6 +26,12 @@ app.use(orderRouter);
 app.use(paymentRouter);
 app.use(imgRouter)
 
+app.use((err, req, res, next) => {
+  console.error(err);
+
+  res.status(500).json({ error: 'Internal server error' });
+});
+
 const startServer = async () => {
   try {
     await mongoose.connect(process.env.MONGODB_URL);

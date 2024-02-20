@@ -19,6 +19,7 @@ const Navbar = () => {
   const isTokenExist = localStorage.getItem("Auth token");
 
   const itemsInCart = useSelector((state) => state.cart);
+  const isAdmin = useSelector((state) => state.auth.user.isAdmin);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top">
@@ -53,12 +54,7 @@ const Navbar = () => {
           </ul>
           <div className="buttons text-center">
             {isTokenExist ? (
-              <button
-                className="btn btn-outline-dark m-2"
-                onClick={logOutHandler}
-              >
-                <i className="fa-solid fa-right-from-bracket mr-1"></i> Log Out
-              </button>
+              " "
             ) : (
               <Link to="/" className="btn btn-outline-dark m-2">
                 <i className="fa fa-sign-in-alt mr-1"></i> Login
@@ -83,18 +79,24 @@ const Navbar = () => {
                   Profile
                 </button>
                 <ul className="dropdown-menu">
+                  {isAdmin && (
                   <li>
                     <Link to={"/profile"} className="dropdown-item">
                       All details
                     </Link>
                   </li>
+                      )}
+                    <li>
+                      <Link to={"/userprofile"} className="dropdown-item">
+                        Account info
+                      </Link>
+                    </li>
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Account settings
-                    </a>
+                  <li className="dropdown-item" onClick={logOutHandler}>
+                    <i className="fa-solid fa-right-from-bracket mr-1"></i> Log
+                    Out
                   </li>
                 </ul>
               </div>

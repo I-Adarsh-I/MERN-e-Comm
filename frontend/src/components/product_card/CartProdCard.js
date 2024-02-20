@@ -38,7 +38,7 @@ function CartProdCard(props) {
         <div className="col-lg-3 col-md-12">
           <div className="bg-image rounded" data-mdb-ripple-color="light">
             <img
-              src="https://contents.mediadecathlon.com/p2511365/b56ebd41ddfccff9283ab6dcdbb0b224/p2511365.jpg"
+              src={props.propData.image}
               // className="w-100"
               alt="product-img"
               width={100}

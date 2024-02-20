@@ -79,3 +79,23 @@ module.exports.getAllOrders = async (req, res) => {
     console.log(err);
   }
 };
+
+//Delete order by ID
+
+module.exports.deleteSingleOrder = async(req,res) => {
+  try {
+    const orderId = req.params.orderId
+    const order = await orderModel.findOne({_id: orderId});
+    if(!order){
+      return res.status(404).json({error: 'Order not found/placed'});
+    }
+
+    const deletedOrder = await orderModel.deleteOne({_id: orderId});
+    if(deletedOrder){
+      return res.status(200).json({message: 'Order deleted successfully', deletedOrder: deletedOrder})
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({error: 'Internal server error'});
+  }
+}

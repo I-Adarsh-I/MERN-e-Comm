@@ -1,15 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Summary from "../../components/order_summary/Summary";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { BASE_API } from "../../config";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { clearCart } from "../../redux/slices/cartSlice";
 
 function Checkout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   const [allItems, setAllItems] = useState([]);
   const [isInCheckout, setIsInCheckout] = useState(false);
@@ -95,16 +97,17 @@ function Checkout() {
         window.open(approvalUrl, "_blank");
 
         setLoading(false);
+        dispatch(clearCart())
 
+        clearCartFromLocalStorage();
         placeOrder();
 
         navigate("/allproducts");
 
-        toast.success(resp.data.message);
       } else {
         navigate("/checkout");
       }
-      console.log(resp);
+      // console.log(resp);
     } catch (err) {
       console.log(err);
     }
@@ -128,9 +131,8 @@ function Checkout() {
       quantity: item.quantity // Quantity of the product
     }));
 
-    // Construct the request object
     const request = {
-      products: products, // Ensure products is an array of objects
+      products: products, 
       shippingAddress: {
         address,
         city,
@@ -138,11 +140,11 @@ function Checkout() {
         state,
         postalCode: postal // Add postalCode field
       },
-      paymentMethod: 'PayPal', // Assuming a default payment method
+      paymentMethod: 'PayPal', // default payment method
       taxPrice: 0, // Placeholder for tax price
       shippingPrice: 0, // Placeholder for shipping price
-      totalPrice: itemsInCart.reduce((total, item) => total + item.price, 0), // Total price based on items in cart
-      isPaid: false, // Assuming payment is not immediately processed
+      totalPrice: itemsInCart.reduce((total, item) => total + item.price, 0),
+      isPaid: false,
     };
 
 
@@ -150,12 +152,28 @@ function Checkout() {
       const resp = axios.post(`${BASE_API}/placeorder`,request, config);
       
       if(resp.status === 200){
+        console.log('working')
         toast.success(resp.data.message)
+
       }
     } catch (err) {
       toast.error(err.data.error)
     }
   };
+
+  const clearCartFromLocalStorage = () => {
+    const persistedData = JSON.parse(localStorage.getItem('persist:root'));
+
+    if (persistedData && persistedData.cart) {
+        delete persistedData.cart;
+        localStorage.setItem('persist:root', JSON.stringify(persistedData));
+    }
+};
+
+// useEffect(() => {
+//   clearCartFromLocalStorage()
+// })
+
   return (
     <div>
       <div className="container py-5">
@@ -281,10 +299,10 @@ function Checkout() {
                     <img src="./paypal.png" alt="" width={"26px"} /> PayPal
                     {loading && (
                       <div
-                        class="spinner-border spinner-border-sm"
+                        className="spinner-border spinner-border-sm"
                         role="status"
                       >
-                        <span class="visually-hidden">Loading...</span>
+                        <span className="visually-hidden">Loading...</span>
                       </div>
                     )}
                   </button>

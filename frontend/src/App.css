@@ -2,3 +2,7 @@
     display: block;
     margin: 15px 0 0 0;
 }
+.v-sep{
+    height: 30px;
+    border: 1px solid rgb(0, 0, 0);
+}

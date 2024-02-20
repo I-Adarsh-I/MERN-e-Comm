@@ -9,8 +9,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { modalCloseReq } from "../../redux/slices/modalSlice";
 
-function ProductUp() {
-  const navigate = useNavigate();
+function ProfileModal() {
+    const navigate = useNavigate();
   const dispatch = useDispatch();
   const [image, setImage] = useState({ preview: "", data: "" });
   const [inputData, setInputData] = useState({
@@ -202,4 +202,4 @@ function ProductUp() {
   );
 }
 
-export default ProductUp;
+export default ProfileModal;

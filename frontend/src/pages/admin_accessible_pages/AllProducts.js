@@ -5,7 +5,7 @@ import axios from "axios";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "react-bootstrap/Modal";
-import { Button } from "react-bootstrap";
+import ProductUp from "../../components/modal/ProductUp";
 
 function AllOrders() {
   const [allProducts, setAllProducts] = useState([]);
@@ -28,9 +28,8 @@ function AllOrders() {
     try {
       const resp = await axios.get(`${BASE_API}/allproducts`, config);
       if (resp.status === 200) {
-        setAllProducts(resp.data.products);
+        return setAllProducts(resp.data.products);
       }
-      // console.log(resp.data.products)
     } catch (err) {
       console.log(err);
     }
@@ -56,7 +55,6 @@ function AllOrders() {
         config
       );
       if (resp.status === 200) {
-        toast.success(resp.data.message);
         allProductInfo();
       }
     } catch (err) {
@@ -74,9 +72,9 @@ function AllOrders() {
       <div className="top-card mt-3">
         <ProfileInfo />
       </div>
-      <div className="all-orders-sec mt-5">
+      <div className="all-orders-sec mt-5 overflow-auto">
         <h3 className="text-center mb-4">All products</h3>
-        <table className="table table-striped">
+        <table className="table table-striped w-100">
           <thead>
             <tr>
               <th scope="col">Product ID</th>
@@ -88,14 +86,13 @@ function AllOrders() {
           </thead>
           <tbody role="button">
             {allProducts.map((product) => (
-              <tr
-                key={product._id}
-                onClick={() => handleTableRowClick(product)}
-              >
+              <tr key={product._id}>
                 <th scope="row" className="text-muted">
                   {product._id}
                 </th>
-                <td>{product.name}</td>
+                <td onClick={() => handleTableRowClick(product)}>
+                  {product.name}
+                </td>
                 <td className="text-truncate" style={{ maxWidth: "80px" }}>
                   {product.description}
                 </td>
@@ -129,24 +126,37 @@ function AllOrders() {
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <div className="d-flex justify-content-around">
-                <div className="r-sec">
-                  <img
-                    src={selectedProduct.image}
-                    alt={selectedProduct.name}
-                    style={{ width: "100px", height: "100px" }}
-                  />
+              <div className="container row">
+                <div className="col-md-6">
+                  <div className="r-sec">
+                    <img
+                      src={selectedProduct.image}
+                      alt={selectedProduct.name}
+                      className="img-fluid"
+                    />
+                  </div>
                 </div>
-                <div className="r-sec d-flex flex-column gap-2">
-                  <div><span className="h6">Name:</span> {selectedProduct.name}</div>
-                  <div><span className="h6">Description:</span> {selectedProduct.description}</div>
-                  <div><span className="h6">Price:</span> ${selectedProduct.price}</div>
+                <div className="col-md-6">
+                  <div className="r-sec d-flex flex-column gap-2">
+                    <div>
+                      <span className="h6">Name:</span> {selectedProduct.name}
+                    </div>
+                    <div>
+                      <span className="h6">Description:</span>{" "}
+                      {selectedProduct.description}
+                    </div>
+                    <div>
+                      <span className="h6">Price:</span> $
+                      {selectedProduct.price}
+                    </div>
+                  </div>
                 </div>
               </div>
             </Modal.Body>
           </>
         )}
       </Modal>
+
       <ToastContainer autoClose={5000} />
     </div>
   );

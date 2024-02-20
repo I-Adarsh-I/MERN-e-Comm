@@ -16,10 +16,10 @@ function Card(props) {
     } else {
       dispatch(addItem({ ...props.propData, quantity: 1 }));
     }
-    // console.log("_id: ",props.propData._id)
     // console.log("existing Item: ",existingItem)
   }
-
+  // console.log("_id: ",props.propData)
+  
   return (
     <div>
         <div className="card text-center">
@@ -31,7 +31,7 @@ function Card(props) {
             </p>
           </div>
           <ul className="list-group list-group-flush">
-            <li className="list-group-item">$10</li>
+            <li className="list-group-item">${props.propData.price}</li>
           </ul>
           <div className="card-body">
             <Link className="btn btn-dark m-1">
