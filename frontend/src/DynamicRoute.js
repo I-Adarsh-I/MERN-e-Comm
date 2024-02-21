@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 import { loginSuccessful, logout } from "./redux/slices/userSlice";
 import Home from "./pages/Home/Home";
 import Login from "./pages/auth/Login";
@@ -27,16 +27,17 @@ function DynamicRoute() {
     if (userInfo) {
       dispatch(loginSuccessful(userInfo));
       if (window.location.pathname === "/") {
-       return navigate("/home");
+        navigate("/home");
       }
     } else {
       localStorage.removeItem("persist:root");
       localStorage.removeItem("Auth token");
       dispatch(logout());
-      if(!window.location.pathname === '/register'){
-        navigate("/");
+      if (window.location.pathname !== '/register') {
+        navigate('/');
       }
     }
+    console.log(userInfo);
   }, []);
 
   return (

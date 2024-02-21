@@ -3,8 +3,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { BASE_API } from "../../config";
 import axios from "axios";
 import { loginSuccessful, logout } from "../../redux/slices/userSlice";
+import { useNavigate } from "react-router-dom";
 
 function UserProfile() {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [updateField, setUpdateField] = useState(false);
@@ -55,6 +57,7 @@ function UserProfile() {
     localStorage.removeItem("Auth token");
     localStorage.removeItem("persist:root");
     dispatch(logout());
+    navigate('/')
   };
 
   return (
