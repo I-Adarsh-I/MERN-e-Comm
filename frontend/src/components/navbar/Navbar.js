@@ -1,15 +1,17 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/slices/userSlice";
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const logOutHandler = () => {
     try {
       localStorage.removeItem("Auth token");
       localStorage.removeItem("persist:root");
-
+      dispatch(logout())
       navigate("/");
     } catch (err) {
       console.log(err);

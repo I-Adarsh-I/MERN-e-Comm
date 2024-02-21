@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { BASE_API } from "../../config";
 import axios from "axios";
+import "./auth.css";
 
 function Register() {
   const navigate = useNavigate();
@@ -12,9 +13,9 @@ function Register() {
     formState: { errors },
   } = useForm();
 
-  const [fullname, setFullname] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [fullname, setFullname] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const onSubmit = async () => {
     const request = {
@@ -41,10 +42,10 @@ function Register() {
   };
 
   return (
-    <div className="container d-flex justify-content-around align-items-center auth-con gap-3">
+    <div className="container d-flex justify-content-around align-items-center auth-con gap-3 main-auth-con">
       <img
         src="https://media.istockphoto.com/id/1222814583/photo/capsule-clothes-in-beige-and-pink-colors-closeup.jpg?s=612x612&w=0&k=20&c=RR9GuFFqnsqb5Xp2CQFS2WYCEIbJgyFS9bjytWzBSLM="
-        alt="Image"
+        alt="Register"
         className="login-image"
       />
       <div className="border rounded main-form-container d-flex flex-column align-items-center p-3">

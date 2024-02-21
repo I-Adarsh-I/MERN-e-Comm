@@ -1,8 +1,24 @@
 .dropdown-menu.show {
-    display: block;
-    margin: 15px 0 0 0;
+  display: block;
+  margin: 15px 0 0 0;
 }
-.v-sep{
-    height: 30px;
-    border: 1px solid rgb(0, 0, 0);
+.v-sep {
+  height: 30px;
+  border: 1px solid rgb(0, 0, 0);
+}
+
+@media screen and (max-width: 480px) {
+  .extra-card {
+    display: none;
+  }
+  .profile-info-text{
+    text-align: center;
+  }
+  .pit-h2{
+    margin-top: 15px;
+  }
+  .option-buttons{
+    justify-content: center;
+    margin-top: 20px;
+  }
 }

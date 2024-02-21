@@ -15,23 +15,28 @@ import AllProfiles from "./pages/admin_accessible_pages/AllProfiles";
 import Success from "./pages/chekout/Success";
 import Failure from "./pages/chekout/Failure";
 import UserProfile from "./pages/profile/UserProfile";
+import AdminRoutes from "./AdminRoutes";
+import PageNotFound from "./pages/pageNotFound/PageNotFound";
 
 function DynamicRoute() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userInfo = useSelector((state) => state.auth.user);
-  
+  const userInfo = useSelector((state) => state.auth.isLoggedIn);
+
   useEffect(() => {
     if (userInfo) {
       dispatch(loginSuccessful(userInfo));
-      navigate('/home')
+      if (window.location.pathname === "/") {
+       return navigate("/home");
+      }
     } else {
       localStorage.removeItem("persist:root");
       localStorage.removeItem("Auth token");
       dispatch(logout());
-      navigate("/");
+      if(!window.location.pathname === '/register'){
+        navigate("/");
+      }
     }
-    
   }, []);
 
   return (
@@ -44,12 +49,34 @@ function DynamicRoute() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/allorders" element={<AllOrders />} />
-        <Route path="/productslist" element={<AllProducts />} />
-        <Route path="/allprofiles" element={<AllProfiles />} />
         <Route path="/paymentsuccess" element={<Success />} />
         <Route path="/paymentfailure" element={<Failure />} />
         <Route path="/userprofile" element={<UserProfile />} />
+        <Route
+          path="/allorders"
+          element={
+            <AdminRoutes>
+              <AllOrders />
+            </AdminRoutes>
+          }
+        />
+        <Route
+          path="/productslist"
+          element={
+            <AdminRoutes>
+              <AllProducts />
+            </AdminRoutes>
+          }
+        />
+        <Route
+          path="/allprofiles"
+          element={
+            <AdminRoutes>
+              <AllProfiles />
+            </AdminRoutes>
+          }
+        />
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   );

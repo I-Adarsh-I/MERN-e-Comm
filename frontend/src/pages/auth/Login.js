@@ -12,8 +12,8 @@ function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const {
     register,
@@ -22,39 +22,39 @@ function Login() {
   } = useForm();
 
   const onSubmit = async () => {
-    const request = { 
+    const request = {
       email: email,
       password: password,
     };
 
     try {
       const resp = await axios.post(`${BASE_API}/login`, request);
-      
-      dispatch(loginRequested())
+
+      dispatch(loginRequested());
       if (resp.status === 200) {
         // console.log(resp.data.user.existingUser);
         navigate("/home");
-        dispatch(loginSuccessful(resp.data.user.existingUser))
-        localStorage.setItem('Auth token', resp.data.token.token)
-        toast.success(resp.data.messgae)
+        dispatch(loginSuccessful(resp.data.user.existingUser));
+        localStorage.setItem("Auth token", resp.data.token.token);
+        toast.success(resp.data.messgae);
       }
       if (resp.status === 400) {
         console.log(resp.data.error);
-        toast.error(resp.data.error)
+        toast.error(resp.data.error);
         navigate("/");
       }
     } catch (err) {
-      toast.error(err.response.data.error)
+      toast.error(err.response.data.error);
 
       console.log(err);
     }
   };
 
   return (
-    <div className="container d-flex justify-content-around align-items-center auth-con gap-3">
+    <div className="container d-flex justify-content-around align-items-center auth-con gap-3 main-auth-con">
       <img
         src="https://media.istockphoto.com/id/1222814583/photo/capsule-clothes-in-beige-and-pink-colors-closeup.jpg?s=612x612&w=0&k=20&c=RR9GuFFqnsqb5Xp2CQFS2WYCEIbJgyFS9bjytWzBSLM="
-        alt="Image"
+        alt="Login"
         className="login-image"
       />
       <div className="border rounded main-form-container d-flex flex-column align-items-center p-3">
@@ -137,7 +137,7 @@ function Login() {
           </form>
         </div>
       </div>
-            <ToastContainer autoClose={5000}/>
+      <ToastContainer autoClose={5000} />
     </div>
   );
 }

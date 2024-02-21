@@ -20,27 +20,13 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import UserProfile from "./pages/profile/UserProfile";
 import DynamicRoute from "./DynamicRoute";
+import AdminRoutes from "./AdminRoutes";
 
 function App() {
   return (
     <div className="App">
       <Navbar />
       <DynamicRoute />
-      {/* <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/allproducts" element={<Products />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/checkout" element={<Checkout />} />
-        <Route path="/profile" element={<Profile />} />
-        <Route path="/allorders" element={<AllOrders />} />
-        <Route path="/productslist" element={<AllProducts />} />
-        <Route path="/allprofiles" element={<AllProfiles />} />
-        <Route path="/paymentsuccess" element={<Success />} />
-        <Route path="/paymentfailure" element={<Failure />} />
-        <Route path="/userprofile" element = {<UserProfile />} />
-      </Routes> */}
       <ToastContainer autoClose={5000} />
     </div>
   );

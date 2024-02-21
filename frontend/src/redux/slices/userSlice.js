@@ -20,9 +20,11 @@
       },
       loginError(state) {
         state.isLoading = false;
+        state.isLoading = false;
         state.user = {};
       },
       logout(state) {
+        state.isLoading = false;
         state.isLoggedIn = false;
         state.user = {};
       },

@@ -8,3 +8,20 @@
 .form{
     width: 100%;
 }
+
+@media screen and (max-width: 480px) {
+    .auth-con{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .main-auth-con{
+        flex-direction: column;
+    }
+    .login-image{
+        display: none;
+    }
+    .main-form-container{
+        width: 80%;
+    }
+}
