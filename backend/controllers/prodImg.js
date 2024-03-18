@@ -1,44 +1,32 @@
 var express = require("express");
 var multer = require("multer");
 const path = require("path");
+const cloudinary = require("cloudinary").v2;
 
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "uploads/");
-  },
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-module.exports.upload = multer({
-  storage: storage,
-  limits: {
-    fileSize: 1024 * 1024 * 5, //size: 1mb
-  },
-  fileFilter: (req, file, cb) => {
-    if (
-      file.mimetype === "image/png" ||
-      file.mimetype === "image/jpg" ||
-      file.mimetype === "image/jpeg"
-    ) {
-        cb(null, true)
-    }else{
-        cb(new Error('Only .png, .jpg, and .jpeg file types are supported'), false);
-        return res.status(400).json({error: 'Only .png, .jpg and .jpeg file types are supported'})
+const upload = async (req, res) => {
+  try {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ error: 'No file uploaded' });
     }
-  },
-});
 
-module.exports.download = (req,res) => {
-  const filename = req.params.filename;
+    const result = await cloudinary.uploader.upload(file.path, {
+      folder: 'E-commerce',
+    });
 
-  const filePath = path.join(__dirname,"../uploads/",filename);
+    const imageUrl = result.secure_url;
 
-  res.download(filePath, filename, (err) =>{
-      if(err){
-          console.log(err)
-          res.status(500).json({error: "Internal server error"})
-      }
-  })
-}
+    res.status(200).json({ imageUrl });
+  } catch (error) {
+    console.error('Error uploading image to Cloudinary:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+module.exports = { upload };

@@ -20,12 +20,14 @@ const corsConfiguration = {
 app.use(cors(corsConfiguration));
 app.use(express.json());
 
+//All routes
 app.use(router);
 app.use(productRouter);
 app.use(orderRouter);
 app.use(paymentRouter);
 app.use(imgRouter)
 
+//Common middleware
 app.use((err, req, res, next) => {
   console.error(err);
 
