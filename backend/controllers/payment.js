@@ -16,8 +16,8 @@ module.exports.makePayment = async(req,res) => {
                 "payment_method": "paypal"
             },
             "redirect_urls": {
-                "return_url": "http://localhost:3000/paymentsuccess",
-                "cancel_url": "http://localhost:3000/paymentfailure"
+                "return_url": `${process.env.BASE_URL}/paymentsuccess`,
+                "cancel_url": `${process.env.BASE_URL}paymentfailure`
             },
             "transactions": [{
                 "item_list": {
