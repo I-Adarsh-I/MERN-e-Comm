@@ -12,7 +12,7 @@ const verifyAdmin = require("./middlewares/verifyAdmin");
 var app = express();
 
 const corsConfiguration = {
-  origin: "http://localhost:3000",
+  origin: ["http://localhost:3000", "https://distro-clothing.vercel.app"],
   methods: ["GET", "POST", "DELETE", "PUT"],
   credentials: true,
 };
