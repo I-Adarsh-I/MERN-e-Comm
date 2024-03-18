@@ -6,6 +6,11 @@
   height: 30px;
   border: 1px solid rgb(0, 0, 0);
 }
+.navbar-expand-lg .navbar-collapse {
+  display: flex !important;
+  flex-basis: auto;
+  justify-content: right;
+}
 
 @media screen and (max-width: 480px) {
   .extra-card {

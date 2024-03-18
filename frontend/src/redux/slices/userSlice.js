@@ -12,6 +12,7 @@
     reducers: {
       loginRequested(state) {
         state.isLoading = true;
+        state.isLoggedIn = false
       },
       loginSuccessful(state, action) {
         state.isLoading = false;

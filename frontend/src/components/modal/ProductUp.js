@@ -4,7 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import "./modal.css";
 import axios from "axios";
 import { BASE_API } from "../../config";
-import { ToastContainer, toast } from "react-toastify";
+import { Toaster, toast } from "alert";
 import "react-toastify/dist/ReactToastify.css";
 import { useDispatch, useSelector } from "react-redux";
 import { modalCloseReq } from "../../redux/slices/modalSlice";
@@ -12,6 +12,8 @@ import { modalCloseReq } from "../../redux/slices/modalSlice";
 function ProductUp() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState({ preview: "", data: "" });
   const [inputData, setInputData] = useState({
     productName: "",
@@ -35,7 +37,7 @@ function ProductUp() {
     };
     setImage(img);
   };
-  
+
   //Image upload
   const handleImgUp = async () => {
     try {
@@ -55,23 +57,30 @@ function ProductUp() {
   // Add new product
   const addNewProduct = async () => {
     try {
+      setIsLoading(true);
       if (!inputData.productName) {
+        setIsLoading(false);
         return toast.error("Product name cannot be empty");
       } else if (!inputData.productDes) {
+        setIsLoading(false);
         return toast.error("Please add a description to the product");
       } else if (!inputData.productPrice) {
+        setIsLoading(false);
         return toast.error("Please enter price of the product");
       } else if (!image) {
+        setIsLoading(false);
+
         return toast.error("Cannot proceed without image");
       }
 
       const imgRes = await handleImgUp();
+      console.log("img - ", imgRes);
 
       const request = {
         name: inputData.productName,
         description: inputData.productDes,
         price: inputData.productPrice,
-        image: `${BASE_API}/files/${imgRes.data.filename}`,
+        image: imgRes.data.imageUrl,
       };
 
       const config = {
@@ -84,13 +93,15 @@ function ProductUp() {
       const resp = await axios.post(`${BASE_API}/addproduct`, request, config);
       if (resp.status === 201) {
         toast.success(resp.data.message);
-        navigate('/allproducts')
-        window.location.reload()
+        navigate("/allproducts");
+        window.location.reload();
         dispatch(modalCloseReq());
+        setIsLoading(false);
       }
     } catch (err) {
       console.log(err);
       toast.error(err.response.data.error);
+      setIsLoading(false);
     }
   };
 
@@ -190,14 +201,33 @@ function ProductUp() {
               </div>
             </form>
             <div className="post-btn d-flex justify-content-end">
-              <button className="btn btn-primary" onClick={addNewProduct}>
-                Add product
-              </button>
+              {isLoading ? (
+                <>
+                  <button
+                    className="btn btn-primary d-flex justify-content-center align-items-center gap-2"
+                    disabled
+                  >
+                    Please wait...
+                    <div
+                      className="spinner-border spinner-border-sm "
+                      role="status"
+                    >
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button className="btn btn-primary" onClick={addNewProduct}>
+                    Add product
+                  </button>
+                </>
+              )}
             </div>
           </div>
         </div>
       </Modal.Body>
-      <ToastContainer autoClose={5000} />
+      <Toaster position="top-right" duration={5000} />
     </Modal>
   );
 }

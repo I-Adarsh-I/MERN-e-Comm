@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import "./auth.css";
 import { Link, useNavigate } from "react-router-dom";
 import { BASE_API } from "../../config";
 import axios from "axios";
-import { useDispatch } from "react-redux";
-import { loginRequested, loginSuccessful } from "../../redux/slices/userSlice";
-import { ToastContainer, toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  loginError,
+  loginRequested,
+  loginSuccessful,
+  logout,
+} from "../../redux/slices/userSlice";
+import { Toaster, toast } from "alert";
 import "react-toastify/dist/ReactToastify.css";
 function Login() {
   const navigate = useNavigate();
@@ -15,40 +20,50 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const userInfo = useSelector((state) => state.auth);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const onSubmit = async () => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
+
     const request = {
       email: email,
       password: password,
     };
 
+    dispatch(loginRequested());
     try {
       const resp = await axios.post(`${BASE_API}/login`, request);
 
-      dispatch(loginRequested());
       if (resp.status === 200) {
-        // console.log(resp.data.user.existingUser);
         navigate("/home");
         dispatch(loginSuccessful(resp.data.user.existingUser));
         localStorage.setItem("Auth token", resp.data.token.token);
-        toast.success(resp.data.messgae);
+        return toast.success("User logged in successfully");
       }
       if (resp.status === 400) {
         console.log(resp.data.error);
-        toast.error(resp.data.error);
         navigate("/");
+        dispatch(loginError());
+        return toast.error(resp.data.error);
       }
     } catch (err) {
+      dispatch(loginError());
       toast.error(err.response.data.error);
-
       console.log(err);
     }
   };
+
+  useEffect(() => {
+    if (window.location.pathname === "/") {
+      dispatch(logout());
+    }
+  }, []);
 
   return (
     <div className="container d-flex justify-content-around align-items-center auth-con gap-3 main-auth-con">
@@ -102,12 +117,30 @@ function Login() {
                 </div>
               )}
             </div>
-            <button
-              type="submit"
-              className="btn btn-primary container-fluid mt-3"
-            >
-              Submit
-            </button>
+            {userInfo.isLoading ? (
+              <>
+                <button
+                  type="submit"
+                  disabled
+                  className="btn btn-primary container-fluid mt-3 d-flex justify-content-center align-items-center gap-2"
+                >
+                  Please wait...
+                  <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="submit"
+                  className="btn btn-primary container-fluid mt-3"
+                  onClick={e => onSubmit(e)}
+                >
+                  Submit
+                </button>
+              </>
+            )}
             <p className="mt-2" style={{ fontSize: "14px" }}>
               Don't have an account?{" "}
               <Link
@@ -137,7 +170,7 @@ function Login() {
           </form>
         </div>
       </div>
-      <ToastContainer autoClose={5000} />
+      <Toaster position="top-center" duration={5000} />
     </div>
   );
 }

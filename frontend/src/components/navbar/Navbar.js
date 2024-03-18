@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/slices/userSlice";
@@ -7,11 +7,12 @@ const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [isInHome, setIsInHome] = useState(false);
   const logOutHandler = () => {
     try {
       localStorage.removeItem("Auth token");
       localStorage.removeItem("persist:root");
-      dispatch(logout())
+      dispatch(logout());
       navigate("/");
     } catch (err) {
       console.log(err);
@@ -21,13 +22,25 @@ const Navbar = () => {
   const isTokenExist = localStorage.getItem("Auth token");
 
   const itemsInCart = useSelector((state) => state.cart);
-  const isAdmin = useSelector((state) => state.auth.user.isAdmin);
+  const userInfo = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    if (window.location.pathname === "/home") {
+      setIsInHome(true);
+    } else {
+      dispatch(logout())
+      setIsInHome(false);
+    }
+  }, [window.location.pathname]);
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light py-3 sticky-top">
       <div className="container">
-        <Link className="navbar-brand fw-bold fs-4 px-2" to="/">
-          Cloth Mantra
+        <Link
+          className="navbar-brand fw-bold fs-4 px-2"
+          to={isInHome ? "/home" : "/" }
+        >
+          <img src="/logo.png" alt="Clothing distro" width={'200px'}/>
         </Link>
         <button
           className="navbar-toggler mx-2"
@@ -42,18 +55,20 @@ const Navbar = () => {
         </button>
 
         <div className="collapse navbar-collapse" id="navbarSupportedContent">
-          <ul className="navbar-nav m-auto my-2 text-center gap-5">
-            <li className="nav-item fw-bold">
-              <Link className="nav-link" to="/home">
-                Home{" "}
-              </Link>
-            </li>
-            <li className="nav-item fw-bold">
-              <Link className="nav-link" to="/allproducts">
-                Products
-              </Link>
-            </li>
-          </ul>
+          {userInfo.isLoggedIn && (
+            <ul className="navbar-nav m-auto my-2 text-center gap-5">
+              <li className="nav-item fw-bold">
+                <Link className="nav-link" to="/home">
+                  Home{" "}
+                </Link>
+              </li>
+              <li className="nav-item fw-bold">
+                <Link className="nav-link" to="/allproducts">
+                  Products
+                </Link>
+              </li>
+            </ul>
+          )}
           <div className="buttons text-center">
             {isTokenExist ? (
               " "
@@ -81,18 +96,18 @@ const Navbar = () => {
                   Profile
                 </button>
                 <ul className="dropdown-menu">
-                  {isAdmin && (
-                  <li>
-                    <Link to={"/profile"} className="dropdown-item">
-                      All details
-                    </Link>
-                  </li>
-                      )}
+                  {userInfo.user.isAdmin && (
                     <li>
-                      <Link to={"/userprofile"} className="dropdown-item">
-                        Account info
+                      <Link to={"/profile"} className="dropdown-item">
+                        All details
                       </Link>
                     </li>
+                  )}
+                  <li>
+                    <Link to={"/userprofile"} className="dropdown-item">
+                      Account info
+                    </Link>
+                  </li>
                   <li>
                     <hr className="dropdown-divider" />
                   </li>

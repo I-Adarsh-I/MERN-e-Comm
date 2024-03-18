@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { BASE_API } from "../../config";
 import axios from "axios";
 import "./auth.css";
+import { Toaster, toast } from "alert";
 
 function Register() {
   const navigate = useNavigate();
@@ -16,8 +17,11 @@ function Register() {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = async () => {
+  const onSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
     const request = {
       name: fullname,
       email: email,
@@ -29,14 +33,18 @@ function Register() {
       console.log(resp);
 
       if (resp.status === 200) {
-        console.log(resp.data.message);
+        toast.success(resp.data.message)
+        setIsLoading(false);
         navigate("/");
       }
       if (resp.status === 400) {
-        console.log(resp.data.error);
+        toast.error(resp.data.error)
+        setIsLoading(false)
         navigate("/");
       }
     } catch (err) {
+      setIsLoading(false)
+      toast.error(err.response.data.error)
       console.log(err);
     }
   };
@@ -114,9 +122,31 @@ function Register() {
                 </div>
               )}
             </div>
-            <button className="btn btn-primary container-fluid mt-3">
-              Submit
-            </button>
+
+            {isLoading ? (
+              <>
+                <button
+                  type="submit"
+                  disabled
+                  className="btn btn-primary container-fluid mt-3 d-flex justify-content-center align-items-center gap-2"
+                >
+                  Please wait...
+                  <div class="spinner-border spinner-border-sm" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                  </div>
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="submit"
+                  className="btn btn-primary container-fluid mt-3"
+                  onClick={e => onSubmit(e)}
+                >
+                  Submit
+                </button>
+              </>
+            )}
             <p className="mt-2" style={{ fontSize: "14px" }}>
               Already have an account?{" "}
               <Link
@@ -146,6 +176,7 @@ function Register() {
           </form>
         </div>
       </div>
+      <Toaster position="top-right" duration={5000}/>
     </div>
   );
 }

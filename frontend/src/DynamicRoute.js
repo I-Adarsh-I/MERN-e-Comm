@@ -21,23 +21,22 @@ import PageNotFound from "./pages/pageNotFound/PageNotFound";
 function DynamicRoute() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const userInfo = useSelector((state) => state.auth.isLoggedIn);
+  const userInfo = useSelector((state) => state.auth.user);
 
   useEffect(() => {
     if (userInfo) {
       dispatch(loginSuccessful(userInfo));
       if (window.location.pathname === "/") {
-        navigate("/home");
+        return navigate("/home");
       }
     } else {
       localStorage.removeItem("persist:root");
       localStorage.removeItem("Auth token");
       dispatch(logout());
-      if (window.location.pathname !== '/register') {
-        navigate('/');
+      if (window.location.pathname !== "/register") {
+        navigate("/");
       }
     }
-    console.log(userInfo);
   }, []);
 
   return (
